@@ -144,6 +144,13 @@ export class CreateWorkspace extends React.Component<CreateWorkspaceProps, Creat
                 case ErrorCodes.USER_BLOCKED:
                     window.location.href = getBlockedUrl();
                     return;
+                case ErrorCodes.SETUP_REQUIRED:
+                    window.location.href = new GitpodHostUrl(window.location.toString()).with({ pathname: "first-steps" }).toString();
+                    return;
+                case ErrorCodes.USER_TERMS_ACCEPTANCE_REQUIRED:
+                    const thisUrl = window.location.toString();
+                    window.location.href = new GitpodHostUrl(thisUrl).withApi({ pathname: "/tos", search: `returnTo=${encodeURIComponent(thisUrl)}` }).toString();
+                    return;
                 case ErrorCodes.NOT_AUTHENTICATED:
                     if (data) {
                         this.setState({
@@ -205,7 +212,10 @@ export class CreateWorkspace extends React.Component<CreateWorkspaceProps, Creat
             }
         }
         if (code === ErrorCodes.SETUP_REQUIRED) {
-            window.location.href = new GitpodHostUrl(window.location.toString()).with({ pathname: "first-steps" }).toString();
+            return <ApplicationFrame />;
+        }
+        if (code === ErrorCodes.USER_TERMS_ACCEPTANCE_REQUIRED) {
+            return <ApplicationFrame />;
         }
         if (code === ErrorCodes.NOT_AUTHENTICATED) {
             if (data.host && data.scopes && data.messageHint) {
