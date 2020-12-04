@@ -1,0 +1,14 @@
+
+{
+  "poolkeeper": {
+    "nodePoolAnnotation": "cloud.google.com/gke-nodepool",
+    "nodePools": [
+      {
+        "name": "workload",
+        "keepOut": {
+          "namespace": "kube-system"
+        }
+      }
+    ]
+  }
+}
