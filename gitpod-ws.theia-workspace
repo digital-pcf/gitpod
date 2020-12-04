@@ -1,6 +1,6 @@
 {
    "folders": [
-      { "path": "" },
+      { "path": "." },
       { "path": "components/common-go" },
       { "path": "components/content-service" },
       { "path": "components/ee/cerc" },
@@ -17,7 +17,9 @@
       { "path": "components/ws-proxy" },
       { "path": "install/installer" },
       { "path": "dev/blowtorch" },
-      { "path": "dev/loadgen" }
+      { "path": "dev/loadgen" },
+      { "path": "dev/sweeper" },
+      { "path": "dev/poolkeeper" }
    ],
    "settings": {
       "typescript.tsdk": "gitpod/node_modules/typescript/lib",
