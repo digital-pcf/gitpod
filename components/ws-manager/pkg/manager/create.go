@@ -52,6 +52,8 @@ func (m *Manager) createWorkspacePod(startContext *startWorkspaceContext) (*core
 		typeSpecificTpl, err = getWorkspacePodTemplate(m.Config.WorkspacePodTemplate.PrebuildPath)
 	case api.WorkspaceType_PROBE:
 		typeSpecificTpl, err = getWorkspacePodTemplate(m.Config.WorkspacePodTemplate.ProbePath)
+	case api.WorkspaceType_GHOST:
+		typeSpecificTpl, err = getWorkspacePodTemplate(m.Config.WorkspacePodTemplate.GhostPath)
 	}
 	if err != nil {
 		return nil, xerrors.Errorf("cannot read type-specific pod template - this is a configuration problem: %w", err)
@@ -265,6 +267,8 @@ func (m *Manager) createDefiniteWorkspacePod(startContext *startWorkspaceContext
 		prefix = "prebuild"
 	case api.WorkspaceType_PROBE:
 		prefix = "probe"
+	case api.WorkspaceType_GHOST:
+		prefix = "ghost"
 	default:
 		prefix = "ws"
 	}
@@ -521,6 +525,11 @@ func (m *Manager) createWorkspaceContainer(startContext *startWorkspaceContext) 
 		return nil, xerrors.Errorf("cannot create Theia env: %w", err)
 	}
 	mountPropagation := corev1.MountPropagationHostToContainer
+
+	command := []string{"/theia/supervisor", "run"}
+	if startContext.Request.Type == api.WorkspaceType_GHOST {
+		command[1] = "ghost"
+	}
 
 	return &corev1.Container{
 		Name:            "workspace",
